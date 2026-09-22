@@ -1,0 +1,40 @@
+{
+  "server": {
+    "host": "0.0.0.0",
+    "port": "8080",
+    "read_timeout": "5s",
+    "read_header_timeout": "2s",
+    "write_timeout": "10s",
+    "idle_timeout": "120s",
+    "shutdown_timeout": "15s",
+    "drain_duration": "5s",
+    "max_header_bytes": "1MB",
+    "max_body_size": "10MB"
+  },
+  "logger": {
+    "level": "info",
+    "force_color": false,
+    "to_file": true,
+    "log_dir": "logs"
+  },
+  "database": {
+    "driver": "postgres",
+    "host": "localhost",
+    "port": "5432",
+    "name": "train_db",
+    "user": "train_user",
+    "password": "",
+    "database_url": "",
+    "max_open_conns": 25,
+    "max_idle_conns": 25,
+    "min_conns": 5,
+    "max_conn_lifetime": "1h",
+    "max_conn_idle_time": "5m",
+    "health_check_period": "30s",
+    "ssl_mode": "disable"
+  },
+  "auth": {
+    "jwt_secret": "default-development-jwt-secret-key-32-chars-min",
+    "token_ttl": "24h"
+  }
+}
