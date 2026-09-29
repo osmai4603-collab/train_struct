@@ -49,12 +49,15 @@ type Request struct {
 ### دوال البناء وإدارة السياق (Constructors & Context)
 
 #### 1. دالة البناء القياسية الحديثة
+
 ```go
 func NewRequestWithContext(ctx context.Context, method, url string, body io.Reader) (*Request, error)
 ```
+
 تنشئ كائن طلب جديد مرتبط بسياق محدد (`ctx`). إذا كان `body` ينفذ واجهة `io.ReadCloser` يُستخدم كما هو، وإلا يُغلف تلقائياً بـ `io.NopCloser`.
 
 #### 2. النسخ السطحي مقابل النسخ العميق (`WithContext` مقابل `Clone`)
+
 - **`r.WithContext(ctx context.Context) *Request`:** يقوم بإنشاء نسخة سطحية (Shallow Copy) سريعة من هيكل الطلب مع استبدال السياق الداخلي فقط.
 - **`r.Clone(ctx context.Context) *Request`:** يقوم بإنشاء **نسخة عميقة بالكامل (Deep Copy)** تكرر كائنات `URL`، والترويسات `Header`، ومتغيرات التوجيه `matches` و `otherValues`. يُستخدم عند الحاجة إلى تعديل ترويسات الطلب دون التأثير على الروتين الأصلي.
 
@@ -123,6 +126,7 @@ type Response struct {
 ```
 
 ### الأساليب المتاحة على كائن الاستجابة
+
 - **`Cookies() []*Cookie`:** تحلل كافة ترويسات `Set-Cookie` الواردة في الرد وتعيدها كمصفوفة كائنات مهيكلة.
 - **`Location() (*url.URL, error)`:** تستخرج الرابط الموجود في ترويسة `Location` وتعالجه نسبياً إلى رابط الطلب الأصلي (`r.Request.URL`).
 - **`ProtoAtLeast(major, minor int) bool`:** تفحص ما إذا كان إصدار الرد مساوياً أو أحدث من الإصدار المحدد (مثل فحص دعم HTTP/2).
@@ -132,12 +136,15 @@ type Response struct {
 ## 🏷️ 3. معمارية الترويسات: `http.Header` و `CanonicalHeaderKey`
 
 ### التعريف البرمجي
+
 ```go
 type Header map[string][]string
 ```
+
 تُعرّف الترويسات كخريطة مفتاحها نص وقيمتها شريحة نصوص، مما يتيح إسناد قيم متعددة لنفس المفتاح (مثل تكرار ترويسات `Set-Cookie` أو `Accept`).
 
 ### أساليب الترويسات
+
 ```go
 func (h Header) Add(key, value string)   // تضيف قيمة جديدة دون حذف القيم السابقة
 func (h Header) Set(key, value string)   // تستبدل كافة القيم السابقة بقيمة واحدة جديدة
@@ -148,11 +155,14 @@ func (h Header) Clone() Header           // تنشئ نسخة عميقة ومس�
 ```
 
 ### توحيد صيغة المفاتيح: `CanonicalHeaderKey`
+
 بروتوكول HTTP غير حساس لحالة الأحرف في أسماء الترويسات (Case-Insensitive). لضمان سرعة البحث وتجنب تكرار المفاتيح بصيغ مختلفة، تطبق Go خوارزمية التنسيق المعياري (MIME Canonicalization):
+
 ```go
 http.CanonicalHeaderKey("content-type")  // النتيجة: "Content-Type"
 http.CanonicalHeaderKey("x-request-id")  // النتيجة: "X-Request-Id"
 ```
+
 تقوم دالتا `Set` و `Get` و `Add` تلقائياً بتطبيق `CanonicalHeaderKey` على المفتاح قبل البحث أو الإدخال في الخريطة.
 
 ---
@@ -189,6 +199,7 @@ type Cookie struct {
 | **`Partitioned`** | ميزة حديثة تدعم مبادرة Privacy Sandbox ومعيار CHIPS، حيث يتم عزل الكوكي بحسب نطاق الموقع الأعلى (Top-Level Site Partition). |
 
 ### دوال التعامل مع الكوكيز
+
 - `http.SetCookie(w ResponseWriter, cookie *Cookie)`: تضيف ترويسة `Set-Cookie` منسقة بدقة إلى رد الخادم.
 - `(r *Request) Cookie(name string) (*Cookie, error)`: تبحث عن كوكي محدد بالاسم في ترويسات الطلب الوارد.
 - `(r *Request) Cookies() []*Cookie`: تعيد تحليلاً لكافة الكوكيز المرفقة بالطلب.
@@ -202,6 +213,7 @@ func DetectContentType(data []byte) string
 ```
 
 ### كيف تعمل الخوارزمية داخلياً؟
+
 يُعرّف التنفيذ في ملف [`/usr/local/go/src/net/http/sniff.go`](file:///usr/local/go/src/net/http/sniff.go).
 إذا قام المطور بكتابة بيانات عبر `w.Write(data)` دون تحديد ترويسة `Content-Type` مسبقاً، لا تقوم Go بإرسال نوع عشوائي، بل تستدعي خوارزمية فحص قياسية (وفق معيار WHATWG MIME Sniffing):
 

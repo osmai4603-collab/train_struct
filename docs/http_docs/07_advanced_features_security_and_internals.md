@@ -9,6 +9,7 @@
 أضافت Go مؤخراً مكوناً أمنياً ثورياً في صلب المكتبة القياسية داخل ملف [`/usr/local/go/src/net/http/csrf.go`](file:///usr/local/go/src/net/http/csrf.go) لحماية خوادم الويب من هجمات تزوير الطلبات العابرة للمواقع (Cross-Site Request Forgery - CSRF) دون الحاجة لمولدات الرموز المميزة القديمة (Synchronizer Tokens):
 
 ### كيف يعمل التحقق الأمني الحديث؟
+
 تعتمد الحزمة على ترويسة المتصفحات القياسية الحديثة **`Sec-Fetch-Site`** (المدعومة في كافة المتصفحات منذ عام 2023) بالإضافة لمقارنة نطاق ترويسة **`Origin`** مع ترويسة **`Host`**:
 
 1. **الطرائق الآمنة (Safe Methods):** طلبات `GET` و `HEAD` و `OPTIONS` مسموح بها دائماً دون قيود.
@@ -38,6 +39,7 @@
 ```
 
 ### استخدام `CrossOriginProtection` كوسيط (Middleware)
+
 ```go
 func main() {
     mux := http.NewServeMux()
@@ -66,18 +68,21 @@ func main() {
 يحتوي ملف [`/usr/local/go/src/net/http/fs.go`](file:///usr/local/go/src/net/http/fs.go) على واحدة من أذكى خوارزميات تقديم الملفات، والتي تدعم بروتوكول HTTP بكامل تعقيداته تلقائياً:
 
 ### الدوال الأساسية لتقديم الملفات
+
 - **`http.FileServer(root FileSystem) Handler`:** ينشئ معالجاً يقدم الملفات من مسار القرص الصلب.
 - **`http.FileServerFS(root fs.FS) Handler`:** يقدم الملفات من نظام ملفات تجريدي (مثل ملفات الواجهة المدمجة داخل البرنامج عبر `//go:embed`).
 - **`http.ServeFile(w ResponseWriter, r *Request, name string)`:** تقدم ملفاً واحداً محدداً استجابة لطلب.
 - **`http.ServeContent(w ResponseWriter, req *Request, name string, modtime time.Time, content io.ReadSeeker)`:** المحرك الأساسي الذي يقدم دفقاً قابلاً للبحث (`io.ReadSeeker`).
 
 ### القدرات المدمجة تلقائياً في خادم الملفات
+
 1. **الاستئناف والتحميل الجزئي (HTTP 206 Partial Content):** يتعامل الخادم تلقائياً مع ترويسة `Range: bytes=100-2000`، مما يتيح تشغيل الفيديو والتقديم والتأخير فيه بسلاسة ودعم برامج التحميل المجزأ.
 2. **التخزين المؤقت الذكي (Caching Validation):**
    - يدعم ترويسات التحقق المشروط: `If-Modified-Since` و `If-Unmodified-Since`.
    - إذا لم يتغير الملف، يعيد الخادم فوراً رمز `304 Not Modified` بجسم فارغ لتوفير استهلاك الشبكة تماماً.
 3. **الحماية التلقائية من Directory Traversal:** تطهر Go المسارات تلقائياً وترفض أي محاولات لاستخدام `../` للخروج خارج المجلد المصرح به.
 4. **دعم `StripPrefix`:** لتشغيل خادم الملفات تحت مسار فرعي:
+
 ```go
 // تقديم محتويات المجلد المحلي ./static تحت المسار /assets/
 fs := http.FileServer(http.Dir("./static"))
@@ -91,19 +96,24 @@ http.Handle("/assets/", http.StripPrefix("/assets/", fs))
 توفر الحزمة معالجات جاهزة ومغلفة لتنفيذ أنماط معمارية شائعة:
 
 ### 1. معالج المهل الزمنية: `http.TimeoutHandler`
+
 ```go
 func TimeoutHandler(h Handler, dt time.Duration, msg string) Handler
 ```
+
 - **الوظيفة:** يغلف أي معالج بمهلة زمنية صارمة (`dt`).
 - **كيف يعمل؟** يشغل المعالج في Goroutine منفصلة، مع مخزن مؤقت لكتابة الرد. فإذا استغرق المعالج وقتاً أطول من `dt`، يقاطعه الخادم ويرسل للعميل فوراً رمز `503 Service Unavailable` مع الرسالة المحددة، مع حماية الخادم من التسريب.
 
 ### 2. معالج الحجم الأقصى للطلب: `http.MaxBytesHandler`
+
 ```go
 func MaxBytesHandler(h Handler, n int64) Handler
 ```
+
 - يغلف جسم كل طلب وارد بـ `MaxBytesReader` لضمان ألا يتجاوز الحجم الإجمالي للجسم المرفوع `n` بايت، مع إعادة رمز `413 Request Entity Too Large` عند التجاوز.
 
 ### 3. معالجات إعادة التوجيه والصفحات غير الموجودة
+
 - **`http.RedirectHandler(url string, code int) Handler`:** معالج جاهز لإعادة توجيه كافة الطلبات الواردة إلى رابط محدد (مثل تحويل HTTP إلى HTTPS برمز 301).
 - **`http.NotFoundHandler() Handler`:** معالج قياسي يعيد صفحة الخطأ `404 page not found`.
 - **`http.AllowQuerySemicolons(h Handler) Handler`:** يحمي من ثغرات تهريب الاستعلامات (Query Smuggling) عبر تطهير الفواصل المنقوطة `;` في روابط الاستعلام.

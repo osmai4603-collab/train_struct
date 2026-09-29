@@ -1,6 +1,6 @@
 # توثيق المعمارية البرمجية لحزمة `os` في لغة Go
 
-مرحباً بك في الدليل المعماري والتوثيق الهندسي الشامل لحزمة **`os`** (Standard Library Operating System Package) في لغة Go (الإصدار الحديث Go 1.24+ / Go 1.27). 
+مرحباً بك في الدليل المعماري والتوثيق الهندسي الشامل لحزمة **`os`** (Standard Library Operating System Package) في لغة Go (الإصدار الحديث Go 1.24+ / Go 1.27).
 
 تم إعداد هذا التوثيق ليكون مرجعاً هندسياً معمقاً يشرح الفلسفة التصميمية للحزمة، ومبررات وجودها، وتحليلاً تفصيلياً لكل دالة وواجهة وهيكل بيانات، مع تشريح الكواليس منخفضة المستوى (Low-Level Internals) وأفضل الممارسات والأنماط المضادة في بيئات الإنتاج.
 
@@ -50,10 +50,10 @@
 | **`WriteFile`** | دالة Function | كتابة كامل بيانات الملف واستبداله دفعة واحدة | [الفصل 03](./03_file_operations_and_io.md) |
 | **`File.Read / Write`** | توابع Methods | قراءة وكتابة متدفقة مع تحريك المؤشر | [الفصل 03](./03_file_operations_and_io.md) |
 | **`File.ReadAt / WriteAt`** | توابع Methods | قراءة وكتابة متزامنة وخيطية آمنة دون تحريك المؤشر | [الفصل 03](./03_file_operations_and_io.md) |
-| **`File.ReadFrom / WriteTo`**| توابع Methods | نقل صفري فائق السرعة عبر `sendfile`/`splice` | [الفصل 03](./03_file_operations_and_io.md), [الفصل 07](./07_low_level_internals_and_performance.md) |
+| **`File.ReadFrom / WriteTo`** | توابع Methods | نقل صفري فائق السرعة عبر `sendfile`/`splice` | [الفصل 03](./03_file_operations_and_io.md), [الفصل 07](./07_low_level_internals_and_performance.md) |
 | **`File.Seek`** | تابع Method | تحريك مؤشر الموضع في الملف | [الفصل 03](./03_file_operations_and_io.md) |
 | **`File.Sync`** | تابع Method | إجبار كتابة البيانات على وسيط التخزين (`fsync`) | [الفصل 03](./03_file_operations_and_io.md), [الفصل 08](./08_best_practices_security_and_antipatterns.md) |
-| **`File.Truncate` / `Truncate`**| دالة/تابع | تقليص أو توسيع حجم الملف | [الفصل 03](./03_file_operations_and_io.md) |
+| **`File.Truncate` / `Truncate`** | دالة/تابع | تقليص أو توسيع حجم الملف | [الفصل 03](./03_file_operations_and_io.md) |
 | **`File.SetDeadline`** | تابع Method | ضبط مهل زمنية للإدخال والإخراج للأنابيب والمقابس | [الفصل 03](./03_file_operations_and_io.md) |
 | **`File.SyscallConn`** | تابع Method | وصول آمن لواصف النظام الخام دون تعطيل Netpoller | [الفصل 03](./03_file_operations_and_io.md), [الفصل 08](./08_best_practices_security_and_antipatterns.md) |
 | **`File.Fd`** | تابع Method | جلب رقم واصف الملف (يحول للوضع التعطيلي) | [الفصل 03](./03_file_operations_and_io.md) |
@@ -63,7 +63,7 @@
 | **`Remove`** | دالة Function | حذف ملف مفرد أو مجلد فارغ | [الفصل 04](./04_filesystem_and_directory_management.md) |
 | **`RemoveAll`** | دالة Function | حذف تكراري محصن عبر `openat`/`unlinkat` | [الفصل 04](./04_filesystem_and_directory_management.md) |
 | **`ReadDir`** | دالة Function | قراءة محتويات المجلد كـ `[]DirEntry` بأعلى كفاءة | [الفصل 04](./04_filesystem_and_directory_management.md) |
-| **`Link / Symlink / Readlink`**| دوال Functions | إدارة الروابط الصلبة والرمزية وقراءة وجهتها | [الفصل 04](./04_filesystem_and_directory_management.md) |
+| **`Link / Symlink / Readlink`** | دوال Functions | إدارة الروابط الصلبة والرمزية وقراءة وجهتها | [الفصل 04](./04_filesystem_and_directory_management.md) |
 | **`Stat / Lstat`** | دوال Functions | فحص خصائص الملف (مع أو بدون تتبع الروابط) | [الفصل 04](./04_filesystem_and_directory_management.md) |
 | **`SameFile`** | دالة Function | مقارنة دقيقة للملفات بالـ Inode ورقم الجهاز | [الفصل 04](./04_filesystem_and_directory_management.md) |
 | **`Chmod / Chown / Chtimes`** | دوال Functions | تعديل أذونات وملكية وتوقيتات الملفات | [الفصل 04](./04_filesystem_and_directory_management.md) |
@@ -72,14 +72,14 @@
 | **`DirFS / CopyFS`** | دوال Functions | تجريد شجرة المجلدات ونسخ أنظمة `fs.FS` كاملة | [الفصل 04](./04_filesystem_and_directory_management.md) |
 | **`Pipe`** | دالة Function | إنشاء أنبوب اتصال متزامن في الذاكرة | [الفصل 04](./04_filesystem_and_directory_management.md) |
 | **`OpenRoot / OpenInRoot`** | دوال Functions | فتح صندوق حماية جذري معزول للنظام | [الفصل 05](./05_sandboxing_and_root_subsystem.md) |
-| **`Root.*` (كافة توابع الجذر)**| توابع Methods | عمليات ملفات مقيدة داخل المجلد الجذري فقط | [الفصل 05](./05_sandboxing_and_root_subsystem.md) |
-| **`StartProcess / FindProcess`**| دوال Functions | إطلاق العمليات الفرعية والعثور عليها | [الفصل 06](./06_process_lifecycle_and_environment.md) |
-| **`Process.Kill / Signal / Wait`**| توابع Methods | إنهاء، إرسال إشارات، وانتظار العمليات وتفريغها | [الفصل 06](./06_process_lifecycle_and_environment.md) |
+| **`Root.*` (كافة توابع الجذر)** | توابع Methods | عمليات ملفات مقيدة داخل المجلد الجذري فقط | [الفصل 05](./05_sandboxing_and_root_subsystem.md) |
+| **`StartProcess / FindProcess`** | دوال Functions | إطلاق العمليات الفرعية والعثور عليها | [الفصل 06](./06_process_lifecycle_and_environment.md) |
+| **`Process.Kill / Signal / Wait`** | توابع Methods | إنهاء، إرسال إشارات، وانتظار العمليات وتفريغها | [الفصل 06](./06_process_lifecycle_and_environment.md) |
 | **`Getenv / LookupEnv`** | دوال Functions | قراءة متغيرات البيئة (التمييز بين الفارغ والمعدوم) | [الفصل 06](./06_process_lifecycle_and_environment.md) |
-| **`Setenv / Unsetenv / Clearenv`**| دوال Functions | تعديل وحذف وتفريغ متغيرات البيئة للعملية | [الفصل 06](./06_process_lifecycle_and_environment.md) |
-| **`Environ / Expand / ExpandEnv`**| دوال Functions | سرد وتمديد نصوص المتغيرات البيئية | [الفصل 06](./06_process_lifecycle_and_environment.md) |
-| **`Getuid / Geteuid / Getgid...`**| دوال Functions | استعلام الهوية الأمنية للمستخدم والمجموعات | [الفصل 06](./06_process_lifecycle_and_environment.md) |
-| **`Getpagesize / Hostname / Executable`**| دوال Functions | استعلام حجم صفحة الذاكرة واسم الجهاز ومسار البرنامج | [الفصل 06](./06_process_lifecycle_and_environment.md) |
+| **`Setenv / Unsetenv / Clearenv`** | دوال Functions | تعديل وحذف وتفريغ متغيرات البيئة للعملية | [الفصل 06](./06_process_lifecycle_and_environment.md) |
+| **`Environ / Expand / ExpandEnv`** | دوال Functions | سرد وتمديد نصوص المتغيرات البيئية | [الفصل 06](./06_process_lifecycle_and_environment.md) |
+| **`Getuid / Geteuid / Getgid...`** | دوال Functions | استعلام الهوية الأمنية للمستخدم والمجموعات | [الفصل 06](./06_process_lifecycle_and_environment.md) |
+| **`Getpagesize / Hostname / Executable`** | دوال Functions | استعلام حجم صفحة الذاكرة واسم الجهاز ومسار البرنامج | [الفصل 06](./06_process_lifecycle_and_environment.md) |
 | **`Exit`** | دالة Function | إنهاء فوري للعملية (مع تخطي دوال `defer`) | [الفصل 06](./06_process_lifecycle_and_environment.md), [الفصل 08](./08_best_practices_security_and_antipatterns.md) |
 | **`IsNotExist / IsExist...`** | دوال فحص | دوال مساعدة لفحص تصنيف الأخطاء | [الفصل 07](./07_low_level_internals_and_performance.md) |
 

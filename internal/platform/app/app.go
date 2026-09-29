@@ -179,6 +179,7 @@ func (a *App) Run() error {
 		context.Background(),
 		os.Interrupt,
 		syscall.SIGTERM,
+		os.Kill,
 	)
 	defer sigStop()
 
